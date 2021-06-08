@@ -127,7 +127,7 @@ if __name__=="__main__" :
         
         elif "voice" in query:
             engine.setProperty('voice', voices[0].id)                   #voice[0] - male voice
-            speak("Hello! As per your command I've changed  my voice")
+            speak("Hello!! As per your command I've changed  my voice")
  
         
         
