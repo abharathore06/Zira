@@ -1,0 +1,37 @@
+1. tell me about yourself
+2. who made you
+3. how are you
+4. jokes
+5. who i am
+6. change background
+7. fine
+8. search things
+9. wikipedia
+10. open youtube
+11. open gmail
+12. open google
+13. open windy
+14. play music from local
+15. time
+16. open vscode
+17. open gallery
+18. email to a particular one
+19. news
+20. directions
+21. shut down
+22. quit
+23. screenshot
+24. weather
+25. claculate
+26. question
+27. cost of
+28. write notes
+29. show notes
+30. take a picture
+31. youtube video
+32. roshambo
+33. send whatsapp message
+34. empty recycle bin
+35. restart
+36. hibernate
+
