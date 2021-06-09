@@ -148,7 +148,7 @@ if __name__=="__main__" :
         elif "date" in query:
             today = date.today()
             d = today.strftime("%B %d, %Y")
-            print("date =", d)
+            print("date =" , d)
             speak("Today's date is ")
             speak(d)
         
