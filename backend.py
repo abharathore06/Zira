@@ -20,15 +20,19 @@ import gmapFinder                           #used to access maps for directions
 import xlsxwriter                           #used to write in excel
 from openpyxl import *                      #used to load excel data
 from pptx import Presentation               #used to write, save in powerpoint
-import googletrans
+import googletrans                          #used to translate in various languages
 from googletrans import Translator, LANGUAGES
-import glob
-import psutil
-from datetime import date
+import glob                                 #used to retrieve files/pathnames matching a specified pattern.       
+import psutil                               #used here for battery information
+from datetime import date                   #used to fetch the current date
+import wmi                                  #used to get system information
+import screen_brightness_control as sbc     #used to control screen brightness
+import keyboard
 
 engine = pyttsx3.init('sapi5')                  #speech api helps in recognition of voice        
 voices=engine.getProperty('voices')             #get details of voice
 engine.setProperty('voice', voices[1].id)       #selecting the voice
+sys_sound = 0                                   
 
 
 def speak(audio):
@@ -76,6 +80,20 @@ def sendEmail(to, content):
     server.login("aabharathore86862@gmail.com", "yashita.26.rathore")
     server.sendmail("aabharathore86862@gmail.com", to, content)
     server.close()
+
+def get_size(bytes, suffix="B"):
+    """
+    Scale bytes to its proper format
+    e.g:
+        1253656 => '1.20MB'
+        1253656678 => '1.17GB'
+    """
+    factor = 1024
+    for unit in ["", "K", "M", "G", "T", "P"]:
+        if bytes < factor:
+            return f"{bytes:.2f}{unit}{suffix}"
+        bytes /= factor
+
 
 if __name__=="__main__" :
 
@@ -126,8 +144,12 @@ if __name__=="__main__" :
         
         
         elif "voice" in query:
-            engine.setProperty('voice', voices[0].id)                   #voice[0] - male voice
-            speak("Hello!! As per your command I've changed  my voice")
+            if sys_sound == 0:
+                sys_sound = 1
+            else:
+                sys_sound = 0    
+            engine.setProperty('voice', voices[sys_sound].id) 
+            speak("As per your request I have changed  my voice")
  
         
         
@@ -194,6 +216,151 @@ if __name__=="__main__" :
             cv2.imshow('frame', frame)
             cv2.waitKey()
             cv2.destroyAllWindows()
+
+
+
+
+        elif "open a new tab" in query or "open tab" in query:
+            keyboard.press_and_release("ctrl + t")
+            speak("Opened a new tab")
+
+
+
+
+        elif "open a new window" in query or "open a new browser window" in query or "open window" in query:
+            keyboard.press_and_release("ctrl + n")
+            speak("Opened a new browser window")
+
+
+
+
+        elif "reload" in query or "refresh" in query:
+            keyboard.press_and_release("f5")
+            speak("Reloaded the web")
+
+
+
+
+        elif "full screen" in query:
+            keyboard.press_and_release("f11")
+            speak("Switched to the full screen window")
+
+
+
+
+        elif "scroll" in query: 
+            print("You want to do scroll up or scroll down?")
+            speak("You want to do scroll up or scroll down?")
+            comm = takeCommand()
+            if "up" in comm:
+                keyboard.press_and_release("shift + space")
+            elif "down" in comm:
+               keyboard.press_and_release("space") 
+
+
+
+        
+        elif "browsing history" in query or "history" in query or "browser history" in query or "browsed history" in query:
+            keyboard.press_and_release("ctrl + h")
+            speak("Opened your browsing history")
+
+
+
+
+        elif "downloading history" in query or "download" in query or "download history" in query or "downloded history" in query:
+            keyboard.press_and_release("ctrl + j")
+            speak("Opened your download history")
+
+
+
+
+        elif "open bookmark" in query : 
+            keyboard.press_and_release("ctrl + shift + o")
+            speak("Opened your Bookmark Manager") 
+
+
+
+
+        elif "bookmark" in query : 
+            keyboard.press_and_release("ctrl + d")
+            speak("Bookmarked the current website")
+
+
+
+
+        elif "close this tab" in query or "close the tab" in query or "close tab" in query:
+            keyboard.press_and_release("ctrl + w")
+            speak("Closed the tab")
+
+
+
+        
+        elif "switch the tab" in query or "switch tab" in query or "switch this tab" in query:
+            print("Which tab you want to switch with?")
+            speak("Which tab you want to switch with?")
+            instr = takeCommand()
+            if "last" in instr or "recently opened" in instr or "end" in instr or "ending" in instr:
+                keyboard.press_and_release("ctrl + 9")
+                speak("Switched to the last tab")
+            elif "first" in instr or "firstly opened" in instr or "start" in instr or "starting" in instr:
+                keyboard.press_and_release("ctrl + 1")
+                speak("Switched to the first tab")
+            elif "next" in instr:
+                keyboard.press_and_release("ctrl + tab")
+                speak("Switched to the next tab")
+            elif "previous" in instr:
+                keyboard.press_and_release("ctrl + shift + tab")
+                speak("Switched to the previous tab")
+
+
+
+
+        elif "reopen the last closed tab" in query or "reopen the tab" in query or "reopen tab" in query or "reopen last tab" in query or "reopen closed tab" in query:
+            keyboard.press_and_release("ctrl + shift + t")
+            speak("Reopened the last closed tab")
+
+
+
+
+        elif "mute" in query or "mute volume" in query: 
+            pyautogui.press('volumemute')
+            speak("Volume has been muted")
+
+
+
+
+        elif "raise" in query or "increase" in query or "up" in query or "high" in query or "higher" in query: 
+            pyautogui.press('volumeup')
+            speak("Volume has been raised")
+
+
+
+
+        elif "down" in query or "decrease" in query or "lower" in query or "low" in query:
+            pyautogui.press('volumedown')
+            speak("Volume has been decreased")
+
+
+
+
+        elif "play" in query or "pause" in query:
+            pyautogui.press('playpause')
+
+
+
+
+        elif "timer" in query or "countdown" in query:
+            print("Enter the time in seconds: ")
+            speak("Enter the time in seconds: ")
+            t = takeCommand()
+            while t:
+                mins, secs = divmod(t, 60)
+                timer = '{:02d}:{:02d}'.format(mins, secs)
+                print(timer, end="\r")
+                time.sleep(1)
+                t -= 1
+            print('Fire in the hole!! Your timer has been ended')
+            speak('Fire in the hole!! Your timer has been ended')
 
 
 
@@ -299,6 +466,31 @@ if __name__=="__main__" :
 
 
 
+        elif "system information" in query:
+            c = wmi.WMI()
+            my_system = c.Win32_ComputerSystem()[0]
+
+            print(f"Manufacturer: {my_system.manufacturer}")
+            speak(f"Manufacturer: {my_system.manufacturer}")
+            print(f"Device Name: {my_system.name}")
+            speak(f"Device Name: {my_system.name}")
+            print(f"Model: {my_system.model}")
+            speak(f"Model: {my_system.model}")
+            print(f"System Type: {my_system.systemType}")
+            speak(f"System Type: {my_system.systemType}")
+            svmem = psutil.virtual_memory()
+            print(f"Total Memory :{get_size(svmem.total)}")
+            speak(f"Total Memory :{get_size(svmem.total)}")
+            print(f"Available: {get_size(svmem.available)}")
+            speak(f"Available: {get_size(svmem.available)}")
+            print(f"Used: {get_size(svmem.used)}")
+            speak(f"Used: {get_size(svmem.used)}")
+            print(f"Percentage: {svmem.percent}%")
+            speak(f"Percentage: {svmem.percent}%")
+
+
+
+
         elif "convert" in query:
             speak("Tell me what I have to convert?")
             text_c = takeCommand() 
@@ -365,13 +557,46 @@ if __name__=="__main__" :
 
 
 
+        elif "brightness" in query or "light" in query:
+            current_b = sbc.get_brightness()
+            print("Your current brightness level is", current_b, "%.")
+            speak(f"Your current brightness level is {current_b} % .")
+            print("Would you like to adjust?")
+            speak("Would you like to adjust?")
+            com = takeCommand()
+
+            if 'yes' in com or "sure" in com or "yeah" in com or "ok" in com:
+                print("At what percentage you want to adjust?")
+                speak("At what percentage you want to adjust?")
+                per = int(takeCommand())
+
+                if per<current_b:
+                    new1 = sbc.set_brightness(per)
+                    print("Your brightness is faded to ", new1, "%")
+                    speak(f"Your brightness is faded to {new1} percent")
+                elif per>current_b:
+                    new2 = sbc.set_brightness(per)
+                    print("Your brightness is increased to ", new2, "%")
+                    speak(f"Your brightness is increased to {new2} percent")
+                else:
+                    print("That's exactly the level you're at.")
+                    speak("That's exactly the level you're at.")
+
+            else:
+                print("OK, You are on the same brightness level")
+                speak("OK, You are on the same brightness level")
+
+
+
+
         elif "minimize" in query:
             fw = pyautogui.getActiveWindow()
             #print(fw)
-            while (fw.isMinimized==True):
+            if (fw.isMinimized==True):
                 print("The window is already in a minimized mode")
                 speak("The window is already in a minimized mode")
-            fw.minimize()
+            else:
+                fw.minimize()
 
 
 
@@ -379,21 +604,21 @@ if __name__=="__main__" :
         elif "maximize" in query:
             fw = pyautogui.getActiveWindow()
             #print(fw)
-            while (fw.isMaximized==True):
+            if (fw.isMaximized==True):
                 print("The window is already in a maximized mode")
                 speak("The window is already in a maximized mode")
-            fw.maximize()
+            else:
+                fw.maximize()
 
 
 
 
         elif "close" in query or "destroy" in query or "stop" in query:
-            fw = pyautogui.getActiveWindow()
             print("Do you really want to quit the window?")
             speak("Do you really want to quit the window?")
             confirm = takeCommand()
             if "yes" in confirm or "sure" in confirm or "yeah" in confirm or "sure" in confirm:
-                fw.close()
+                keyboard.press_and_release("alt + f4")
             else:
                 pass
 
