@@ -73,8 +73,8 @@ def sendEmail(to, content):
     server = smtplib.SMTP("smtp.gmail.com", 587)
     server.ehlo()
     server.starttls()
-    server.login("aabharathore86862@gmail.com", "yashita.26.rathore")
-    server.sendmail("aabharathore86862@gmail.com", to, content)
+    server.login("your-email", "your-password")
+    server.sendmail("your-email", to, content)
     server.close()
 
 if __name__=="__main__" :
@@ -314,7 +314,7 @@ if __name__=="__main__" :
 
         
         elif 'send a whatsapp message' in query or 'send whatsapp' in query:
-            phone_dict={"abha":"+917746081400", "shreya":"+919352056977", }#use only lower case letters
+            phone_dict={"contact-name":"+91contact-no", "contact-name":"+91contact-no", }#use only lower case letters
             print('\nWho should I send this message to?')
             speak('Who should I send this message to?')
             name=takeCommand()
@@ -323,7 +323,7 @@ if __name__=="__main__" :
                 print('\nWhat would you like it to say?')
                 speak('What would you like it to say?')
                 msg=takeCommand()
-                content=(f'J.A.R.V.I.S. :  {msg}')
+                content=(f'Z.I.R.A. :  {msg}')
                 print('\nWould you like to send this message now or at a specific time?')
                 speak('Would you like to send this message now or at a specific time?')
                 choice = takeCommand()
@@ -659,7 +659,7 @@ if __name__=="__main__" :
 
         elif 'send an email' in query or 'send mail' in query:
             speak('yes I am working on it')
-            contacts={"shreya":"shreya.awesome2040@gmail.com", "atharv" : "aaryan.a.diwankar@gmail.com"}
+            contacts={"name":"gmail id", "name" : "gmail id"}
             print("\nWho am I writing to?")
             speak("Who am I writing to?")
             name=takeCommand()
